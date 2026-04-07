@@ -37,36 +37,6 @@ function fetchDataAndDraw(startStr, endStr) {
             const fan = status.map(s => s.includes("fan"));
 
             // ===============================
-            // DETEKCE VÝPADKŮ
-            // ===============================
-            const timestamps = timeLocal.map(t => t.getTime());
-            const dt = timestamps.slice(1).map((t, i) => (t - timestamps[i]) / 1000);
-
-            const sorted = [...dt].sort((a, b) => a - b);
-            const expectedInterval = sorted[Math.floor(sorted.length / 2)];
-
-            const gapIdx = dt
-                .map((d, i) => d > expectedInterval * 2 ? i : -1)
-                .filter(i => i >= 0);
-
-            // ===============================
-            // VLOŽENÍ NaN DO SIGNÁLŮ
-            // ===============================
-            for (const i of gapIdx) {
-
-                for (const arr of F) {
-                    arr[i] = NaN;
-                    arr[i + 1] = NaN;
-                }
-
-                heaterSig[i] = NaN;
-                heaterSig[i + 1] = NaN;
-
-                fanSig[i] = NaN;
-                fanSig[i + 1] = NaN;
-            }
-
-            // ===============================
             // MIN/MAX Z PŮVODNÍCH DAT
             // ===============================
             const allTemperatures = [...F[0], ...F[2], ...F[4], ...F[5]].filter(v => !isNaN(v));
@@ -97,6 +67,36 @@ function fetchDataAndDraw(startStr, endStr) {
 
             const heaterSig = heater.map(h => h ? yHeater : null);
             const fanSig = fan.map(h => h ? yFan : null);
+
+            // ===============================
+            // DETEKCE VÝPADKŮ
+            // ===============================
+            const timestamps = timeLocal.map(t => t.getTime());
+            const dt = timestamps.slice(1).map((t, i) => (t - timestamps[i]) / 1000);
+
+            const sorted = [...dt].sort((a, b) => a - b);
+            const expectedInterval = sorted[Math.floor(sorted.length / 2)];
+
+            const gapIdx = dt
+                .map((d, i) => d > expectedInterval * 2 ? i : -1)
+                .filter(i => i >= 0);
+
+            // ===============================
+            // VLOŽENÍ NaN DO SIGNÁLŮ
+            // ===============================
+            for (const i of gapIdx) {
+
+                for (const arr of F) {
+                    arr[i] = NaN;
+                    arr[i + 1] = NaN;
+                }
+
+                heaterSig[i] = NaN;
+                heaterSig[i + 1] = NaN;
+
+                fanSig[i] = NaN;
+                fanSig[i + 1] = NaN;
+            }
 
             // ===============================
             // KRESLENÍ – ECharts
