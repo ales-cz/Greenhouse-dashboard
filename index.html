@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Skleník - Grafy Teploty</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+
+</head>
+
+<body class="bg-light">
+  <!-- Zobáček – musí být mimo panel -->
+  <div id="panel-tab">Ovládání</div>
+
+  <!-- Výsuvný panel -->
+  <div id="side-panel">
+
+    <h5>Časový interval</h5>
+
+    <div id="time-controls" class="btn-group mb-3 w-100">
+      <button class="btn btn-outline-primary" data-range="24h">24 h</button>
+      <button class="btn btn-outline-primary" data-range="3d">3 dny</button>
+      <button class="btn btn-outline-primary" data-range="7d">Týden</button>
+      <button class="btn btn-outline-primary" data-range="30d">Měsíc</button>
+    </div>
+
+    <label class="form-label">Od:</label>
+    <input type="datetime-local" id="startInput" class="form-control mb-3">
+
+    <label class="form-label">Do:</label>
+    <input type="datetime-local" id="endInput" class="form-control mb-3">
+
+    <button id="applyRange" class="btn btn-primary w-100">Zobrazit</button>
+  </div>
+
+  <!-- Obsah stránky -->
+  <div class="container-fluid p-4 ms-2 me-2">
+    <div id="graf_temperature" class="graf-box"></div>
+    <div id="graf_humidity" class="graf-box"></div>
+    <div id="graf_illumination" class="graf-box"></div>
+    <div id="graf_pressure" class="graf-box"></div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>

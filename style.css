@@ -1,0 +1,47 @@
+/* Výsuvný panel */
+#side-panel {
+  position: fixed;
+  top: 0;
+  left: -285px;
+  /* panel schovaný, zobáček vidět */
+  width: 300px;
+  height: 100vh;
+  background: #fff;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  transition: left 0.3s ease;
+  z-index: 2000;
+  overflow-y: auto;
+}
+
+/* Zobáček – mimo panel, vždy viditelný */
+#panel-tab {
+  position: fixed;
+  bottom: 5%;
+  left: 0;
+  width: 25px;
+  height: 120px;
+  background: #6c757d;
+  color: white;
+  writing-mode: vertical-rl;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  z-index: 3000;
+}
+
+/* Hover efekt – vysune panel */
+#panel-tab:hover+#side-panel,
+#side-panel:hover {
+  left: 0;
+}
+
+/* Grafy */
+.graf-box {
+  height: 90vh;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 40px;
+}
