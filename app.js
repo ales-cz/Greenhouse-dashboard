@@ -322,3 +322,13 @@ document.getElementById("applyRange").addEventListener("click", () => {
 const now = new Date();
 const start = new Date(Date.now() - 24 * 3600 * 1000);
 loadData(start, now);
+
+// ===============================
+// MOBIL – OTEVŘENÍ PANELU
+// ===============================
+const panel = document.getElementById("side-panel");
+const tab = document.getElementById("panel-tab");
+
+tab.addEventListener("click", () => {
+    panel.classList.toggle("open");
+});

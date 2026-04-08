@@ -2,9 +2,8 @@
 #side-panel {
   position: fixed;
   top: 0;
-  left: -285px;
-  /* panel schovaný, zobáček vidět */
-  width: 300px;
+  left: -280px;
+  width: 280px;
   height: 100vh;
   background: #fff;
   border-right: 1px solid #ddd;
@@ -14,7 +13,7 @@
   overflow-y: auto;
 }
 
-/* Zobáček – mimo panel, vždy viditelný */
+/* Zobáček */
 #panel-tab {
   position: fixed;
   bottom: 5%;
@@ -31,17 +30,64 @@
   z-index: 3000;
 }
 
-/* Hover efekt – vysune panel */
-#panel-tab:hover+#side-panel,
-#side-panel:hover {
+/* Desktop hover */
+@media (hover: hover) {
+
+  #panel-tab:hover+#side-panel,
+  #side-panel:hover {
+    left: 0;
+  }
+}
+
+/* Mobil – otevření přes třídu .open */
+#side-panel.open {
   left: 0;
 }
 
 /* Grafy */
 .graf-box {
-  height: 90vh;
+  height: 70vh;
   background: #fafafa;
   border: 1px solid #ddd;
   border-radius: 6px;
   margin-bottom: 40px;
+}
+
+/* --- RESPONSIVNÍ ÚPRAVY --- */
+
+/* Mobilní telefony */
+@media (max-width: 576px) {
+  #side-panel {
+    width: 100%;
+    left: -100%;
+  }
+
+  #panel-tab {
+    height: 80px;
+    width: 20px;
+  }
+
+  .graf-box {
+    height: 55vh;
+  }
+}
+
+/* Tablety */
+@media (min-width: 577px) and (max-width: 992px) {
+  .graf-box {
+    height: 60vh;
+  }
+}
+
+/* Velké displeje – grafy vedle sebe */
+@media (min-width: 992px) {
+  .container-fluid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .graf-box {
+    height: 45vh;
+  }
 }
