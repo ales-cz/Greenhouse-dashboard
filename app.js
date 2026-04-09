@@ -106,10 +106,7 @@ function fetchDataAndDraw(startStr, endStr) {
 
                 grid: { left: 60, right: 20, top: 50, bottom: 100 },
 
-                dataZoom: [
-                    { type: "inside" },
-                    { type: "slider", bottom: 10, height: 40 }
-                ],
+                dataZoom: [{ type: "slider" }],
 
                 tooltip: {
                     trigger: "axis",
@@ -165,7 +162,14 @@ function fetchDataAndDraw(startStr, endStr) {
                         restore: {},
                         saveAsImage: {}
                     }
-                }
+                },
+
+                media: [
+                    {
+                        query: { maxWidth: 850 },
+                        option: { legend: { show: false } }
+                    }
+                ]
             };
 
             const chart_temperature = echarts.init(document.getElementById("graf_temperature"));
@@ -275,8 +279,22 @@ function fetchDataAndDraw(startStr, endStr) {
         });
 }
 
+const panel = document.getElementById("top-panel");
+const tab = document.getElementById("panel-tab");
+
 // ===============================
-// FUNKCE PRO OVLÁDÁNÍ INTERVALU
+// VYČIŠTĚNÍ VALIDITY PŘI ZMĚNĚ DATA
+// ===============================
+startInput.addEventListener("input", () => {
+    endInput.setCustomValidity("");
+});
+
+endInput.addEventListener("input", () => {
+    endInput.setCustomValidity("");
+});
+
+// ===============================
+// NAČTENÍ DAT A VYKRESLENÍ GRAFŮ
 // ===============================
 function loadData(start, end) {
     fetchDataAndDraw(
@@ -286,7 +304,7 @@ function loadData(start, end) {
 }
 
 // ===============================
-// RYCHLÉ VOLBY
+// RYCHLÉ VOLBY ČASOVÝCH ROZSAHŮ
 // ===============================
 document.querySelectorAll("#time-controls button[data-range]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -300,35 +318,54 @@ document.querySelectorAll("#time-controls button[data-range]").forEach(btn => {
             case "30d": start = new Date(Date.now() - 30 * 24 * 3600 * 1000); break;
         }
 
+        // Zavřít panel
+        panel.classList.remove("open");
+
         loadData(start, now);
     });
 });
 
 // ===============================
-// RUČNÍ VÝBĚR
+// RUČNÍ VÝBĚR ČASOVÉHO ROZSAHU
 // ===============================
 document.getElementById("applyRange").addEventListener("click", () => {
-    const start = document.getElementById("startInput").value;
-    const end = document.getElementById("endInput").value;
+    const startDate = document.getElementById("startInput").value;
+    const endDate = document.getElementById("endInput").value;
 
-    if (!start || !end) return alert("Vyber datum od–do");
+    // HTML5 validace (required apod.)
+    if (!startInput.reportValidity() || !endInput.reportValidity()) return;
 
-    loadData(start, end);
+    // Validace: konec nesmí být dříve než začátek
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    if (startDate && endDate && endDateObj < startDateObj) {
+        endInput.setCustomValidity("Datum 'Do' nesmí být před datem 'Od'.");
+        endInput.reportValidity();
+        return;
+    }
+
+    // Nastavení časů intervalu
+    startDateObj.setHours(0, 0, 0, 0);
+    endDateObj.setHours(23, 59, 59, 999);
+
+    // Zavřít panel
+    panel.classList.remove("open");
+
+    // Spustit načtení dat
+    loadData(startDateObj, endDateObj);
 });
 
 // ===============================
-// START – POSLEDNÍCH 24 HODIN
+// VÝCHOZÍ ČASOVÝ ROZSAH – POSLEDNÍCH 24 HODIN
 // ===============================
 const now = new Date();
 const start = new Date(Date.now() - 24 * 3600 * 1000);
 loadData(start, now);
 
 // ===============================
-// MOBIL – OTEVŘENÍ PANELU
+// OTEVŘENÍ / ZAVŘENÍ PANELU KLIKNUTÍM NA ZÁLOŽKU
 // ===============================
-const panel = document.getElementById("side-panel");
-const tab = document.getElementById("panel-tab");
-
 tab.addEventListener("click", () => {
     panel.classList.toggle("open");
 });

@@ -13,11 +13,11 @@
 </head>
 
 <body class="bg-light">
-  <!-- Zobáček – musí být mimo panel -->
+  <!-- Zobáček -->
   <div id="panel-tab">Ovládání</div>
 
   <!-- Výsuvný panel -->
-  <div id="side-panel">
+  <div id="top-panel">
 
     <h5>Časový interval</h5>
 
@@ -28,29 +28,27 @@
       <button class="btn btn-outline-primary" data-range="30d">Měsíc</button>
     </div>
 
-    <label class="form-label">Od:</label>
-    <input type="datetime-local" id="startInput" class="form-control mb-3">
+    <div class="row g-2 mb-3">
+      <div class="col">
+        <label class="form-label">Od:</label>
+        <input type="date" id="startInput" class="form-control" required>
+      </div>
 
-    <label class="form-label">Do:</label>
-    <input type="datetime-local" id="endInput" class="form-control mb-3">
+      <div class="col">
+        <label class="form-label">Do:</label>
+        <input type="date" id="endInput" class="form-control" required>
+      </div>
+    </div>
 
     <button id="applyRange" class="btn btn-primary w-100">Zobrazit</button>
   </div>
 
   <!-- Obsah stránky -->
-  <div class="container-fluid p-4 ms-2 me-2 row g-4">
-    <div class="col-12 col-lg-6">
-      <div id="graf_temperature" class="graf-box"></div>
-    </div>
-    <div class="col-12 col-lg-6">
-      <div id="graf_humidity" class="graf-box"></div>
-    </div>
-    <div class="col-12 col-lg-6">
-      <div id="graf_illumination" class="graf-box"></div>
-    </div>
-    <div class="col-12 col-lg-6">
-      <div id="graf_pressure" class="graf-box"></div>
-    </div>
+  <div class="container-fluid pt-5">
+    <div id="graf_temperature" class="graf-box"></div>
+    <div id="graf_humidity" class="graf-box"></div>
+    <div id="graf_illumination" class="graf-box"></div>
+    <div id="graf_pressure" class="graf-box"></div>
   </div>
 
   <script src="app.js"></script>
