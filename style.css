@@ -43,13 +43,19 @@
   border-radius: 6px;
 }
 
+h5 {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-weight: 600;
+}
+
 /* --- RESPONSIVNÍ ÚPRAVY --- */
 
 /* Mobilní telefony */
 @media (max-width: 576px) {
-  #top-panel {
+  /* #top-panel {
     width: 100%;
-  }
+    max-width: 100%;
+  } */
 }
 
 /* Tablety */
