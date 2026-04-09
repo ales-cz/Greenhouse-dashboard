@@ -1,75 +1,104 @@
-/* Zobáček */
-#panel-tab {
+/* Mezera pro ouško */
+body {
+  padding-top: 40px;
+}
+
+#top-panel-wrap {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 15px;
-  background: #ccc;
-  border-radius: 0 0 6px 6px;
-  cursor: pointer;
-  z-index: 3000;
+  width: min(500px, 100%);
+  transform: translate(-50%, -100%);
+  transition: transform 0.3s ease;
+  z-index: 2000;
   user-select: none;
+}
+
+/* Otevřený panel */
+#top-panel-wrap.open {
+  transform: translate(-50%, 0);
 }
 
 /* Výsuvný panel */
 #top-panel {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -100%);
-  width: 500px;
-  max-width: 90%;
+  position: relative;
   background: #fff;
   border-bottom: 1px solid #ddd;
   padding: 20px;
   border-radius: 0 0 12px 12px;
-  transition: transform 0.3s ease;
-  z-index: 2000;
-  overflow-y: auto;
-  user-select: none;
 }
 
-/* Otevření panelu */
-#top-panel.open {
-  transform: translate(-50%, 0);
+/* Ouško panelu */
+#panel-tab {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 14px;
+  background: #ccc;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+/* Šipka */
+#panel-tab .arrow {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+/* Otočení šipky při otevření panelu */
+#top-panel-wrap.open #panel-tab .arrow {
+  transform: rotate(180deg);
+}
+
+/* Kontejner pro grafy */
+.container-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 /* Grafy */
 .graf-box {
-  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: 95dvh;
+  min-height: 250px;
   background: #fafafa;
   border: 1px solid #ddd;
   border-radius: 6px;
 }
 
-h5 {
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
-  font-weight: 600;
+/* Spinner */
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
 }
 
-/* --- RESPONSIVNÍ ÚPRAVY --- */
+/* --- RESPONSIVNÍ DESIGN --- */
 
 /* Mobilní telefony */
 @media (max-width: 576px) {
-  /* #top-panel {
+  #top-panel {
     width: 100%;
     max-width: 100%;
-  } */
-}
-
-/* Tablety */
-@media (min-width: 577px) and (max-width: 1199px) {
-  .graf-box+.graf-box {
-    margin-top: 16px;
   }
 }
 
-/* Velké displeje – grafy vedle sebe */
+/* Velké displeje – grid 2 x 2 */
 @media (min-width: 1200px) {
-  .container-fluid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+  .graf-box {
+    width: calc(50% - 0.5rem);
+    height: 45dvh;
   }
 }

@@ -5,6 +5,25 @@ const CHANNEL_ID = 2619064;
 const READ_API_KEY = "R7SGV6V9IVH43BHL";
 
 // ===============================
+// INICIALIZACE GRAFŮ
+// ===============================
+let chart_temperature;
+let chart_humidity;
+let chart_illumination;
+let chart_pressure;
+
+function initCharts() {
+    chart_temperature = echarts.init(document.getElementById("graf_temperature"));
+    chart_humidity = echarts.init(document.getElementById("graf_humidity"));
+    chart_illumination = echarts.init(document.getElementById("graf_illumination"));
+    chart_pressure = echarts.init(document.getElementById("graf_pressure"));
+}
+
+initCharts();
+
+const spinner = document.getElementById("loading-overlay");
+
+// ===============================
 // HLAVNÍ FUNKCE – NAČTENÍ A VYKRESLENÍ
 // ===============================
 function fetchDataAndDraw(startStr, endStr) {
@@ -172,8 +191,6 @@ function fetchDataAndDraw(startStr, endStr) {
                 ]
             };
 
-            const chart_temperature = echarts.init(document.getElementById("graf_temperature"));
-
             const option_temperature = {
                 ...baseOption,
 
@@ -195,7 +212,6 @@ function fetchDataAndDraw(startStr, endStr) {
 
             chart_temperature.setOption(option_temperature);
 
-            const chart_humidity = echarts.init(document.getElementById("graf_humidity"));
             const option_humidity = {
                 ...baseOption,
 
@@ -223,7 +239,6 @@ function fetchDataAndDraw(startStr, endStr) {
             };
             chart_humidity.setOption(option_humidity);
 
-            const chart_illumination = echarts.init(document.getElementById("graf_illumination"));
             const option_illumination = {
                 ...baseOption,
 
@@ -250,7 +265,6 @@ function fetchDataAndDraw(startStr, endStr) {
             };
             chart_illumination.setOption(option_illumination);
 
-            const chart_pressure = echarts.init(document.getElementById("graf_pressure"));
             const option_pressure = {
                 ...baseOption,
 
@@ -276,14 +290,26 @@ function fetchDataAndDraw(startStr, endStr) {
                 ]
             };
             chart_pressure.setOption(option_pressure);
+
+            spinner.classList.add("d-none");
         });
 }
 
-const panel = document.getElementById("top-panel");
-const tab = document.getElementById("panel-tab");
+// ===============================
+// PŘIZPŮSOBENÍ VELIKOSTI GRAFŮ PŘI ZMĚNĚ VELIKOSTI OKNA
+// ===============================
+window.addEventListener("load", () => {
+
+    window.addEventListener("resize", () => {
+        chart_temperature.resize();
+        chart_humidity.resize();
+        chart_illumination.resize();
+        chart_pressure.resize();
+    });
+});
 
 // ===============================
-// VYČIŠTĚNÍ VALIDITY PŘI ZMĚNĚ DATA
+// VYNULOVÁNÍ VALIDÁTORU PŘI ZMĚNĚ DATA
 // ===============================
 startInput.addEventListener("input", () => {
     endInput.setCustomValidity("");
@@ -303,11 +329,16 @@ function loadData(start, end) {
     );
 }
 
+const panel = document.getElementById('top-panel');
+
 // ===============================
 // RYCHLÉ VOLBY ČASOVÝCH ROZSAHŮ
 // ===============================
 document.querySelectorAll("#time-controls button[data-range]").forEach(btn => {
     btn.addEventListener("click", () => {
+
+        spinner.classList.remove("d-none");
+
         const now = new Date();
         let start;
 
@@ -319,7 +350,7 @@ document.querySelectorAll("#time-controls button[data-range]").forEach(btn => {
         }
 
         // Zavřít panel
-        panel.classList.remove("open");
+        wrap.classList.remove("open");
 
         loadData(start, now);
     });
@@ -329,6 +360,8 @@ document.querySelectorAll("#time-controls button[data-range]").forEach(btn => {
 // RUČNÍ VÝBĚR ČASOVÉHO ROZSAHU
 // ===============================
 document.getElementById("applyRange").addEventListener("click", () => {
+    spinner.classList.remove("d-none");
+
     const startDate = document.getElementById("startInput").value;
     const endDate = document.getElementById("endInput").value;
 
@@ -350,7 +383,7 @@ document.getElementById("applyRange").addEventListener("click", () => {
     endDateObj.setHours(23, 59, 59, 999);
 
     // Zavřít panel
-    panel.classList.remove("open");
+    wrap.classList.remove("open");
 
     // Spustit načtení dat
     loadData(startDateObj, endDateObj);
@@ -363,9 +396,12 @@ const now = new Date();
 const start = new Date(Date.now() - 24 * 3600 * 1000);
 loadData(start, now);
 
+const wrap = document.getElementById('top-panel-wrap');
+const tab = document.getElementById("panel-tab");
+
 // ===============================
 // OTEVŘENÍ / ZAVŘENÍ PANELU KLIKNUTÍM NA ZÁLOŽKU
 // ===============================
 tab.addEventListener("click", () => {
-    panel.classList.toggle("open");
+    wrap.classList.toggle('open');
 });
