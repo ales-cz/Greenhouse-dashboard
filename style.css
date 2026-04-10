@@ -102,3 +102,10 @@ body {
     height: 45dvh;
   }
 }
+
+/* Display na výšku */
+@media (orientation: portrait) {
+  .graf-box {
+    height: 45dvh;
+  }
+}
