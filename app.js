@@ -309,26 +309,31 @@ function debounce(fn, delay) {
 window.addEventListener("load", () => {
 
     let lastWidth = window.innerWidth;
+    const MIN_CHANGE = 40;
 
-    const resizeCharts = () => {
-
-        // Reaguje pouze na změnu šířky
-        if (window.innerWidth === lastWidth) return;
-
-        lastWidth = window.innerWidth;
-
+    function resizeAll() {
         chart_temperature.resize();
         chart_humidity.resize();
         chart_illumination.resize();
         chart_pressure.resize();
-    };
+    }
 
-    window.addEventListener("resize", debounce(resizeCharts, 200));
+    // Desktop + velké změny šířky
+    window.addEventListener("resize", debounce(() => {
+
+        const dw = Math.abs(window.innerWidth - lastWidth);
+
+        if (dw < MIN_CHANGE) return;
+
+        lastWidth = window.innerWidth;
+        resizeAll();
+
+    }, 200));
 
     // Změna orientace displeje
     window.addEventListener("orientationchange", () => {
         lastWidth = window.innerWidth;
-        resizeCharts();
+        resizeAll();
     });
 });
 
