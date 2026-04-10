@@ -298,14 +298,46 @@ function fetchDataAndDraw(startStr, endStr) {
 // ===============================
 // PŘIZPŮSOBENÍ VELIKOSTI GRAFŮ PŘI ZMĚNĚ VELIKOSTI OKNA
 // ===============================
+function debounce(fn, delay) {
+    let timeout;
+    return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(this, arguments), delay);
+    };
+}
+
 window.addEventListener("load", () => {
 
-    window.addEventListener("resize", () => {
+    let lastWidth = window.innerWidth;
+    let lastHeight = window.innerHeight;
+    const MIN_CHANGE = 80;
+
+    function resizeAll() {
         chart_temperature.resize();
         chart_humidity.resize();
         chart_illumination.resize();
         chart_pressure.resize();
+    }
+
+    // Změna orientace displeje
+    window.addEventListener("orientationchange", () => {
+        resizeAll();
     });
+
+    // Velké změny velikosti okna
+    window.addEventListener("resize", debounce(() => {
+
+        const dw = Math.abs(window.innerWidth - lastWidth);
+        const dh = Math.abs(window.innerHeight - lastHeight);
+
+        if (dw < MIN_CHANGE && dh < MIN_CHANGE) return;
+
+        lastWidth = window.innerWidth;
+        lastHeight = window.innerHeight;
+
+        resizeAll();
+
+    }, 200));
 });
 
 // ===============================
