@@ -312,7 +312,7 @@ window.addEventListener("load", () => {
 
     const resizeCharts = () => {
 
-        // Reagujeme jen na změnu šířky
+        // Reaguje pouze na změnu šířky
         if (window.innerWidth === lastWidth) return;
 
         lastWidth = window.innerWidth;
@@ -325,7 +325,7 @@ window.addEventListener("load", () => {
 
     window.addEventListener("resize", debounce(resizeCharts, 200));
 
-    // Otočení telefonu — tady se šířka změní vždy
+    // Změna orientace displeje
     window.addEventListener("orientationchange", () => {
         lastWidth = window.innerWidth;
         resizeCharts();
