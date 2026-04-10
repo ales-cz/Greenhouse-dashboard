@@ -309,35 +309,27 @@ function debounce(fn, delay) {
 window.addEventListener("load", () => {
 
     let lastWidth = window.innerWidth;
-    let lastHeight = window.innerHeight;
-    const MIN_CHANGE = 80;
 
-    function resizeAll() {
+    const resizeCharts = () => {
+
+        // Reagujeme jen na změnu šířky
+        if (window.innerWidth === lastWidth) return;
+
+        lastWidth = window.innerWidth;
+
         chart_temperature.resize();
         chart_humidity.resize();
         chart_illumination.resize();
         chart_pressure.resize();
-    }
+    };
 
-    // Změna orientace displeje
+    window.addEventListener("resize", debounce(resizeCharts, 200));
+
+    // Otočení telefonu — tady se šířka změní vždy
     window.addEventListener("orientationchange", () => {
-        resizeAll();
-    });
-
-    // Velké změny velikosti okna
-    window.addEventListener("resize", debounce(() => {
-
-        const dw = Math.abs(window.innerWidth - lastWidth);
-        const dh = Math.abs(window.innerHeight - lastHeight);
-
-        if (dw < MIN_CHANGE && dh < MIN_CHANGE) return;
-
         lastWidth = window.innerWidth;
-        lastHeight = window.innerHeight;
-
-        resizeAll();
-
-    }, 200));
+        resizeCharts();
+    });
 });
 
 // ===============================
