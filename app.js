@@ -121,7 +121,13 @@ function fetchDataAndDraw(startStr, endStr) {
             // KRESLENÍ – ECharts
             // ===============================
             const baseOption = {
-                legend: { top: 10, icon: "circle", itemWidth: 10, itemHeight: 10, itemGap: 15 },
+                legend: {
+                    top: 10, right: 10, icon: "circle", itemWidth: 10, itemHeight: 10, itemGap: 10,
+                    selected: {
+                        "T podlaha": false,
+                        "T strop": false,
+                    }
+                },
 
                 grid: { left: 60, right: 20, top: 50, bottom: 100 },
 
@@ -172,20 +178,13 @@ function fetchDataAndDraw(startStr, endStr) {
                 }],
 
                 series: [
-                    { name: "Teplota vnitřní", type: "line", data: timeLocal.map((t, i) => [t, F[0][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false },
-                    { name: "Teplota vnější", type: "line", data: timeLocal.map((t, i) => [t, F[2][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false }
+                    { name: "T vnitřní", type: "line", data: timeLocal.map((t, i) => [t, F[0][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false },
+                    { name: "T vnější", type: "line", data: timeLocal.map((t, i) => [t, F[2][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false }
                 ],
-
-                toolbox: {
-                    feature: {
-                        restore: {},
-                        saveAsImage: {}
-                    }
-                },
 
                 media: [
                     {
-                        query: { maxWidth: 850 },
+                        query: { maxWidth: 530 },
                         option: { legend: { show: false } }
                     }
                 ]
@@ -203,8 +202,8 @@ function fetchDataAndDraw(startStr, endStr) {
 
                 series: [
                     ...baseOption.series,
-                    { name: "Teplota podlaha", type: "line", data: timeLocal.map((t, i) => [t, F[4][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false },
-                    { name: "Teplota strop", type: "line", data: timeLocal.map((t, i) => [t, F[5][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false },
+                    { name: "T podlaha", type: "line", data: timeLocal.map((t, i) => [t, F[4][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false },
+                    { name: "T strop", type: "line", data: timeLocal.map((t, i) => [t, F[5][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false },
                     { name: "Vytápění", type: "line", data: timeLocal.map((t, i) => [t, heaterSig[i]]), lineStyle: { width: 2 }, showSymbol: false },
                     { name: "Cirkulace", type: "line", data: timeLocal.map((t, i) => [t, fanSig[i]]), lineStyle: { width: 2 }, showSymbol: false }
                 ]
@@ -215,7 +214,7 @@ function fetchDataAndDraw(startStr, endStr) {
             const option_humidity = {
                 ...baseOption,
 
-                title: { text: "Teplota a vlhkost", left: 10, top: 10, textStyle: { fontSize: 16 } },
+                title: { text: "Teplota, vlhkost", left: 10, top: 10, textStyle: { fontSize: 16 } },
 
                 color: ["#e74c3c", "#c0392b", "#3498db", "#2980b9"],
 
@@ -242,14 +241,14 @@ function fetchDataAndDraw(startStr, endStr) {
             const option_illumination = {
                 ...baseOption,
 
-                title: { text: "Teplota a iIntenzita osvětlení", left: 10, top: 10, textStyle: { fontSize: 16 } },
+                title: { text: "Teplota, osvětlení", left: 10, top: 10, textStyle: { fontSize: 16 } },
 
                 color: ["#e74c3c", "#c0392b", "#f1c40f"],
 
                 yAxis: [
                     baseOption.yAxis[0],
                     {
-                        type: "value", name: "Intenzita osvětlení [lx]", nameLocation: "middle",
+                        type: "value", name: "Osvětlení [lx]", nameLocation: "middle",
                         min: value => minIllumination - 0.05 * rangeIllumination,
                         max: value => maxIllumination + 0.01 * rangeIllumination,
                         axisLabel: { showMinLabel: false, showMaxLabel: false },
@@ -260,7 +259,7 @@ function fetchDataAndDraw(startStr, endStr) {
 
                 series: [
                     ...baseOption.series,
-                    { name: "Intenzita osvětlení", type: "line", data: timeLocal.map((t, i) => [t, F[6][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false, yAxisIndex: 1 },
+                    { name: "Osvětlení", type: "line", data: timeLocal.map((t, i) => [t, F[6][i]]), smooth: 0.2, lineStyle: { width: 2 }, showSymbol: false, yAxisIndex: 1 },
                 ]
             };
             chart_illumination.setOption(option_illumination);
@@ -268,7 +267,7 @@ function fetchDataAndDraw(startStr, endStr) {
             const option_pressure = {
                 ...baseOption,
 
-                title: { text: "Teplota a tlak", left: 10, top: 10, textStyle: { fontSize: 16 } },
+                title: { text: "Teplota, tlak", left: 10, top: 10, textStyle: { fontSize: 16 } },
 
                 color: ["#e74c3c", "#c0392b", "#2ecc71"],
 
@@ -306,17 +305,17 @@ function debounce(fn, delay) {
     };
 }
 
+function resizeAll() {
+    chart_temperature.resize();
+    chart_humidity.resize();
+    chart_illumination.resize();
+    chart_pressure.resize();
+}
+
 window.addEventListener("load", () => {
 
     let lastWidth = window.innerWidth;
     const MIN_CHANGE = 40;
-
-    function resizeAll() {
-        chart_temperature.resize();
-        chart_humidity.resize();
-        chart_illumination.resize();
-        chart_pressure.resize();
-    }
 
     // Desktop + velké změny šířky
     window.addEventListener("resize", debounce(() => {
